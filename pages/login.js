@@ -25,28 +25,28 @@ export default function Login() {
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: 'YOUR_EXPO_CLIENT_ID',
-    iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
-    androidClientId: 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com',
-  });
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   expoClientId: 'YOUR_EXPO_CLIENT_ID',
+  //   iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
+  //   androidClientId: 'YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com',
+  // });
 
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const { authentication } = response;
-      // Use authentication.accessToken to get user info
-      fetchUserInfo(authentication.accessToken);
-    }
-  }, [response]);
+  // useEffect(() => {
+  //   if (response?.type === 'success') {
+  //     const { authentication } = response;
+  //     // Use authentication.accessToken to get user info
+  //     fetchUserInfo(authentication.accessToken);
+  //   }
+  // }, [response]);
 
-  const fetchUserInfo = async (token) => {
-    const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const userInfo = await response.json();
-    console.log(userInfo);
-    // Handle user info (email, name, etc.)
-  };
+  // const fetchUserInfo = async (token) => {
+  //   const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
+  //   const userInfo = await response.json();
+  //   console.log(userInfo);
+  //   // Handle user info (email, name, etc.)
+  // };
 
 
   function emailRegexCorrect(email) {
@@ -112,35 +112,35 @@ export default function Login() {
     setTimer(10);
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const decoded = jwtDecode(userInfo.idToken);
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     const decoded = jwtDecode(userInfo.idToken);
       
-      const response = await AuthService.checkExistingUser(decoded.email);
-      const data = await response.json();
+  //     const response = await AuthService.checkExistingUser(decoded.email);
+  //     const data = await response.json();
       
-      if (data) {
-        Alert.alert("Error", `User with email ${decoded.email} already exists.`);
-        setError("Google login failed. Please try again.");
-      } else {
-        Alert.alert("Success", "Google Login Successful!");
-        navigation.navigate('Survey');
-      }
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        console.error("Google login failed", error);
-        setError("Google login failed. Please try again.");
-      }
-    }
-  };
+  //     if (data) {
+  //       Alert.alert("Error", `User with email ${decoded.email} already exists.`);
+  //       setError("Google login failed. Please try again.");
+  //     } else {
+  //       Alert.alert("Success", "Google Login Successful!");
+  //       navigation.navigate('Survey');
+  //     }
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       console.error("Google login failed", error);
+  //       setError("Google login failed. Please try again.");
+  //     }
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
