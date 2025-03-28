@@ -120,7 +120,13 @@ useEffect(() => {
         await AsyncStorage.setItem('surveys', JSON.stringify(parsedSurveys));
         
         // Submit survey data to the server 
-        const response = await SurveyService.submitSurveyResult(formData);
+        const response = await SurveyService.submitSurveyResult({
+          ...formData,
+          aiModel: formData.aiModel.map(model => ({
+            aiType: model.aiType,
+            description: model.description,
+          })), 
+        });
         if (response.status === 200) {  
             Alert.alert('Success', 'Survey submitted successfully!');
             resetForm();
