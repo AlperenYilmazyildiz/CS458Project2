@@ -10,9 +10,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { AuthService } from '../services/authService';
 import jwtDecode from 'jwt-decode';
-import * as Google from 'expo-auth-session/providers/google';
+// import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from "expo-secure-store";
+import { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
+import { use } from 'react';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -27,10 +29,19 @@ export default function Login() {
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: '920285886677-sdrd539vgvciuk4tu3q6okggvvdad963.apps.googleusercontent.com',
-    iosClientId: '920285886677-1obbrajonkjed0thdvkj0l3t5ehn67p7.apps.googleusercontent.com',
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   webClientId: '920285886677-sdrd539vgvciuk4tu3q6okggvvdad963.apps.googleusercontent.com',
+  //   iosClientId: '920285886677-1obbrajonkjed0thdvkj0l3t5ehn67p7.apps.googleusercontent.com',
+  // });
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      iosClientId: '920285886677-1obbrajonkjed0thdvkj0l3t5ehn67p7.apps.googleusercontent.com',
+      webClientId: '920285886677-sdrd539vgvciuk4tu3q6okggvvdad963.apps.googleusercontent.com',
+      profileImageSize: 120,
+    });
   });
+
 
   // useEffect(() => {
   //   if (response?.type === 'success') {
@@ -116,30 +127,54 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const decoded = jwtDecode(userInfo.idToken);
-      
-      const response = await AuthService.checkExistingUser(decoded.email);
-      const data = await response.json();
-      
-      if (data) {
-        Alert.alert("Error", `User with email ${decoded.email} already exists.`);
-        setError("Google login failed. Please try again.");
-      } else {
-        Alert.alert("Success", "Google Login Successful!");
+      const response = await GoogleSignin.signIn(); 
+      if( isSuccessResponse(response) ){
+        const { idToken, user } = response.data;
+        const { name, email } = user;
+        const userToken = jwtDecode(idToken);
         navigation.navigate('Survey');
       }
+      else{
+        setError("Google login cancelled.");
+      }
+      // await GoogleSignin.hasPlayServices();
+      // const userInfo = await GoogleSignin.signIn();
+      // const decoded = jwtDecode(userInfo.idToken);
+      
+      // const response = await AuthService.checkExistingUser(decoded.email);
+      // const data = await response.json();
+      
+      // if (data) {
+      //   Alert.alert("Error", `User with email ${decoded.email} already exists.`);
+      //   setError("Google login failed. Please try again.");
+      // } else {
+      //   Alert.alert("Success", "Google Login Successful!");
+      //   navigation.navigate('Survey');
+      // }
+
     } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        console.error("Google login failed", error);
+      if( isErrorWithCode(error, statusCodes.SIGN_IN_CANCELLED) ){
+        setError("Google login cancelled.");
+      }
+      else if( isErrorWithCode(error, statusCodes.IN_PROGRESS) ){
+        setError("Google login in progress.");
+      }
+      else if( isErrorWithCode(error, statusCodes.PLAY_SERVICES_NOT_AVAILABLE) ){
+        setError("Google Play Services not available.");
+      }
+      else{
         setError("Google login failed. Please try again.");
       }
+      // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      //   // user cancelled the login flow
+      // } else if (error.code === statusCodes.IN_PROGRESS) {
+      //   // operation (e.g. sign in) is in progress already
+      // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      //   // play services not available or outdated
+      // } else {
+      //   console.error("Google login failed", error);
+      //   setError("Google login failed. Please try again.");
+      // }
     }
   };
 
@@ -181,7 +216,7 @@ export default function Login() {
         
         <TouchableOpacity
           style={styles.googleButton}
-          onPress={() => promptAsync()}
+          onPress={handleGoogleLogin}
           disabled={!request}
         >
           <Text style={styles.googleButtonText}>Sign in with Google</Text>
