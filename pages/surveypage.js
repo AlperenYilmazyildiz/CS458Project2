@@ -288,6 +288,7 @@ useEffect(() => {
         }
         multiline
         numberOfLines={4}
+        maxLength={300}
       />
 
       {isFormValid && (
