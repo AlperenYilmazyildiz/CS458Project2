@@ -6,7 +6,8 @@ const capabilities = {
   'appium:deviceName': 'Android',
   'appium:appPackage': 'com.anonymous.CS458Project2', // Replace with your app's package name
   'appium:appActivity': '.MainActivity', // Replace with your app's main activity 'appium:autoGrantPermissions': true,
-  'appium:noReset': true,
+  'appium:app': './android/app/build/outputs/apk/debug/app-debug.apk',
+  'appium:noReset': false
 };
 
 const wdOpts = {
