@@ -20,7 +20,7 @@ const AI_MODELS = [
   'bard',
   'claude',
   'copilot',
-  'deepSeek'
+  'deepseek'
 ];
 
 const EDUCATION_LEVELS = [
@@ -281,7 +281,7 @@ useEffect(() => {
       <Text style={styles.label}>Beneficial AI Use Cases in Daily Life</Text>
       <TextInput
         style={[styles.input, styles.multilineInput]}
-        placeholder="Describe how AI has been beneficial in your daily life"
+        placeholder="Describe how AI has been beneficial in your daily life (Max 300 characters)"
         value={formData.useCaseOfAi}
         onChangeText={(text) =>
           setFormData({ ...formData, useCaseOfAi: text })
