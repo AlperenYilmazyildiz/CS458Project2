@@ -280,6 +280,7 @@ useEffect(() => {
 
       <Text style={styles.label}>Beneficial AI Use Cases in Daily Life</Text>
       <TextInput
+        testID="ai-use-case-input"
         style={[styles.input, styles.multilineInput]}
         placeholder="Describe how AI has been beneficial in your daily life (Max 300 characters)"
         value={formData.useCaseOfAi}

@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   const handleLogin = async () => {
-    if (!emailRegexCorrect(email)) {
+  if (!emailRegexCorrect(email)) {
       setError("Email format is incorrect. Email must contain one '@', characters before '@' and after '@'.");
       return;
     }
@@ -123,20 +123,17 @@ export default function Login() {
         </TouchableOpacity>
         
         <Text style={styles.divider}>Or</Text>
-        
-        
+        <TouchableOpacity
+          style={styles.googleButton}
+        >
+          <Text style={styles.googleButtonText}>Sign in with Google</Text>
+        </TouchableOpacity> 
       </View>
     </View>
   );
 }
 
-{/* <TouchableOpacity
-          style={styles.googleButton}
-          onPress={handleGoogleLogin}
-          disabled={!request}
-        >
-          <Text style={styles.googleButtonText}>Sign in with Google</Text>
-        </TouchableOpacity> */}
+
 
 const styles = StyleSheet.create({
   container: {
