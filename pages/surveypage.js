@@ -127,7 +127,10 @@ useEffect(() => {
             description: model.description,
           })), 
         });
-        if (response.status === 200) {  
+        const generatedBody = generateMailBody(formData);
+        console.log(response.data);
+        console.log(generatedBody);
+        if (response.status === 200 && response.data === generatedBody) {
             Alert.alert('Success', 'Survey submitted successfully!');
             resetForm();
         }
@@ -159,6 +162,40 @@ useEffect(() => {
     if (!date) return 'Select birth date';
     return date.toLocaleDateString();
   };
+
+  const generateMailBody = (survey) => {
+    const capitalize = (str) =>
+      str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+
+    let body = '';
+    body += `Name: ${survey.name}\n`;
+    body += `Surname: ${survey.surname}\n`;
+    body += `Date of birth: ${formatDateForBackend(survey.dateOfBirth)}\n`;
+    body += `City: ${survey.city}\n`;
+    body += `Gender: ${capitalize(survey.gender)}\n`;
+    body += `AI Models: \n\n`;
+
+    survey.aiModel.forEach((model, index) => {
+      body += `\t${index + 1}.\n`;
+      body += `\t\tAI Type: ${capitalize(model.aiType)}\n`;
+      body += `\t\tDescription: ${model.description}\n`;
+    });
+
+    body += `\nUse Case of AI: ${survey.useCaseOfAi}\n`;
+    body += `Education Level: ${survey.educationLevel}\n`;
+
+    return body;
+  };
+
+  const formatDateForBackend = (date) => {
+      if (!date) return '';
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+  };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -295,6 +332,7 @@ useEffect(() => {
         <TouchableOpacity
           style={styles.submitButton}
           onPress={handleSubmit}
+          accessibilityLabel="send_survey_button"
           disabled={isSending}
         >
           <Text style={styles.submitButtonText}>

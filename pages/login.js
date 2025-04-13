@@ -115,6 +115,7 @@ export default function Login() {
         <TouchableOpacity
           style={[styles.button, isBlocked && styles.buttonDisabled]}
           onPress={handleLogin}
+          accessibilityLabel="login_button"
           disabled={isBlocked}
         >
           <Text style={styles.buttonText}>
