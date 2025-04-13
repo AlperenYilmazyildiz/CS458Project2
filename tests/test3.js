@@ -43,7 +43,7 @@ async function runTest() {
     await okButton1.waitForDisplayed({ timeout: 5000 });
     await okButton1.click();
 
-    const dummyText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod nisl eget aliquam ultricies. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 1234567890";
+    const dummyText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod nisl eget aliquam ultricies. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 12345678901234567890";
     const useCaseInput = await driver.$('android=new UiSelector().resourceId("ai-use-case-input")');
     await useCaseInput.setValue(dummyText);
     
